@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head class="employees">
+        <meta charset="utf-8">
+        <link rel="icon" href="./images/dog.ico" />
+        <title>Canine Munchies</title>
+        <link href=".\stylesheet\style.css" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap" rel="stylesheet">
+        <img src='./images/header-banner.jpg' alt="header-banner" id="header-banner" />
+    </head>
+    <body>
+        <div class="vertical-menu">
+            <a href="index.html">Home Page</a herf>
+            <a href="customers.html">Customers</a herf>
+            <a href="employees.html" class="active">Employees</a href>
+            <a href="orderDetails.html">Order Details</a href>
+            <a href="orders.html">Orders</a href>
+            <a href="products.html">Products</a href>
+        </div>
+        <div class="body-content">
+            <h1  class="page-title">Employees</h1>
+            <p>Please test this web app on Chrome.</p>
+            <div class="page-buttons">
+                <p><b>Please use one of the provided buttons to:</b></p>
+                <button type="button" id="employeeAdd" onclick="toggleShowHide(id)">Add New Employee</button>
+                <inline>&emsp;</inline>
+                <button type="button" id="employeeLookUp" onclick="toggleShowHide(id)">Employee Look-up</button>
+                <inline>&emsp;</inline>
+                <button type="submit" id="employeeListAll" onclick="toggleShowHide('employeeDataTable'), constructListAllTable(id)">List All Employees</button>
+                <inline>&emsp;</inline>
+                <button type="button" id="clearAll" onclick="toggleShowHide(id)">Clear All</button>
+                <br>
+                <br>
+                <script>
+                    function toggleShowHide(id) {
+                        const elementName = id + "Form";
+                        try {
+                            document.getElementById("employeeAddForm").style.display="none"
+                        } finally {}
+                        try {
+                            document.getElementById("employeeLookUpForm").style.display="none"
+                        } finally {} 
+                        try {
+                            document.getElementById("employeeDataTableForm").style.display="none"
+                        } finally {}
+                        try {
+                            document.getElementById("employeeUpdateForm").style.display="none"
+                        } finally {}
+                        try {
+                            let parent = document.getElementById("employeeDataTable")
+                            while(parent.hasChildNodes()) {
+                                parent.removeChild(parent.firstChild)
+                            }
+                        } finally {}
+                        if (elementName !== "clearAllForm") {
+                            document.getElementById(elementName).style.display="block";   
+                        }
+                    }
+                </script>
+            </div>
+            <br>
+            <br>
+            <form class=basicForm id="employeeAddForm" style="display:none;" action="/employeeAdd" method="POST">
+                <h2><b>Add New Employee</b></h2>
+                <p><b>Please enter the following information:</b></p>                
+                <label class=labelForm for="CREATE_employeeLastName">Last Name:</label>
+                <input class=inputForm type="text" id="CREATE_employeeLastName" name="CREATE_employeeLastName" required>
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_employeeFirstName">First Name:</label>
+                <input class=inputForm type="text" id="CREATE_employeeFirstName" name="CREATE_employeeFirstName" required>
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_phoneNumber">Phone Number:</label>
+                <input class=inputForm type="tel" id="CREATE_phoneNumber" name="CREATE_phoneNumber" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="XXX-XXX-XXXX">
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_addressLine1">Address Line 1:</label>
+                <input class=inputForm type="text" id="CREATE_addressLine1" name="CREATE_addressLine1" required>
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_addressLine2">Address Line 2:</label>
+                <input class=inputForm type="text" id="CREATE_addressLine2" name="CREATE_addressLine2">
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_city">City:</label>
+                <input class=inputForm type="text" id="CREATE_city" name="CREATE_city" required>
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_employeeState">State:</label>
+                <select class=inputForm id="CREATE_employeeState" name="CREATE_employeeState" required>
+                    <option value="AL">Alabama</option>
+                    <option value="AK">Alaska</option>
+                    <option value="AZ">Arizona</option>
+                    <option value="AR">Arkansas</option>
+                    <option value="CA">California</option>
+                    <option value="CO">Colorado</option>
+                    <option value="CT">Connecticut</option>
+                    <option value="DE">Delaware</option>
+                    <option value="DC">District Of Columbia</option>
+                    <option value="FL">Florida</option>
+                    <option value="GA">Georgia</option>
+                    <option value="HI">Hawaii</option>
+                    <option value="ID">Idaho</option>
+                    <option value="IL">Illinois</option>
+                    <option value="IN">Indiana</option>
+                    <option value="IA">Iowa</option>
+                    <option value="KS">Kansas</option>
+                    <option value="KY">Kentucky</option>
+                    <option value="LA">Louisiana</option>
+                    <option value="ME">Maine</option>
+                    <option value="MD">Maryland</option>
+                    <option value="MA">Massachusetts</option>
+                    <option value="MI">Michigan</option>
+                    <option value="MN">Minnesota</option>
+                    <option value="MS">Mississippi</option>
+                    <option value="MO">Missouri</option>
+                    <option value="MT">Montana</option>
+                    <option value="NE">Nebraska</option>
+                    <option value="NV">Nevada</option>
+                    <option value="NH">New Hampshire</option>
+                    <option value="NJ">New Jersey</option>
+                    <option value="NM">New Mexico</option>
+                    <option value="NY">New York</option>
+                    <option value="NC">North Carolina</option>
+                    <option value="ND">North Dakota</option>
+                    <option value="OH">Ohio</option>
+                    <option value="OK">Oklahoma</option>
+                    <option value="OR">Oregon</option>
+                    <option value="PA">Pennsylvania</option>
+                    <option value="RI">Rhode Island</option>
+                    <option value="SC">South Carolina</option>
+                    <option value="SD">South Dakota</option>
+                    <option value="TN">Tennessee</option>
+                    <option value="TX">Texas</option>
+                    <option value="UT">Utah</option>
+                    <option value="VT">Vermont</option>
+                    <option value="VA">Virginia</option>
+                    <option value="WA">Washington</option>
+                    <option value="WV">West Virginia</option>
+                    <option value="WI">Wisconsin</option>
+                    <option value="WY">Wyoming</option>
+                </select>
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_postalCode">Postal Code:</label>
+                <input class=inputForm type="number" id="CREATE_postalCode" name="CREATE_postalCode" placeholder="98102" min="10000" max="99999" required>
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_email">Email:</label>
+                <input class=inputForm type="email" id="CREATE_email" name="CREATE_email" required>
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_employeeStatus">Employee Status:</label>
+                <select class=inputForm id="CREATE_employeeStatus" name="CREATE_employeeStatus" required>
+                    <option value="active">active</option>
+                    <option value="termed">termed</option>
+                </select>
+                <br>
+                <br>
+                <button type="submit" onclick="if(this.form.checkValidity()){toggleShowHide('employeeDataTable'), constructEmployeeAddTable(), this.form.reset();}">Submit</button>
+            </form>
+            <script>
+                async function constructEmployeeAddTable() {
+                    event.preventDefault();
+                    const headerArray = [document.getElementById('CREATE_employeeLastName').id,
+                                            document.getElementById('CREATE_employeeFirstName').id,
+                                            document.getElementById('CREATE_phoneNumber').id,
+                                            document.getElementById('CREATE_addressLine1').id,
+                                            document.getElementById('CREATE_addressLine2').id,
+                                            document.getElementById('CREATE_city').id,
+                                            document.getElementById('CREATE_employeeState').id,
+                                            document.getElementById('CREATE_postalCode').id,
+                                            document.getElementById('CREATE_email').id,
+                                            document.getElementById('CREATE_employeeStatus').id];
+                        const dataArray =  [document.getElementById('CREATE_employeeLastName').value,
+                                            document.getElementById('CREATE_employeeFirstName').value,
+                                            document.getElementById('CREATE_phoneNumber').value,
+                                            document.getElementById('CREATE_addressLine1').value,
+                                            document.getElementById('CREATE_addressLine2').value,
+                                            document.getElementById('CREATE_city').value,
+                                            document.getElementById('CREATE_employeeState').value,
+                                            document.getElementById('CREATE_postalCode').value,
+                                            document.getElementById('CREATE_email').value,
+                                            document.getElementById('CREATE_employeeStatus').value];
+                    dataJSON =  '{ '
+                    for (let i = 0; i < dataArray.length; i++) {
+                        if (dataArray[i] === "") {
+                            dataArray[i] = null
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":' + dataArray[i] + ', '
+                        } else {
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":"' + dataArray[i] + '", '
+                        }
+                    }
+                    dataJSON = dataJSON.substring(0, dataJSON.length - 2) + ' }'
+                    dataJSON = JSON.parse(dataJSON)
+                    await fetch(`/employeeAdd`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(dataJSON)
+                    })   
+                    .then(response => response.json())
+                    .then(data => {
+                        const employeeID = data['insertId']
+                        queryString = 'SELECT * FROM Employees WHERE employeeID = ' + employeeID + ';'
+                        fetch(`/employeeLookUp/${queryString}`)   
+                            .then(response => {
+                                return response.json();
+                            })
+                            .then(lookupData => appendData(lookupData))
+                            .catch(function (err) {
+                                console.log('error: ' + err);
+                            });
+                    })
+                    .catch((error) => {
+                        alert("Invalid request")
+                        console.error('Error:', error);
+                    });
+                }
+            </script>
+            <form class=basicForm id="employeeLookUpForm" style="display:none;" action="/employeeLookUp" method="GET">
+                <h2><b>Employee Look-up</b></h2>
+                <p><b>If available, please enter the employee ID number:</b></p>                
+                <label class=labelForm for="READ_employeeID">Employee ID Number:</label>
+                <input class=inputForm type="number" id="READ_employeeID" name="READ_employeeID" min="0" max="999">
+                <br>
+                <p><b>Otherwise, please enter the following information:</b></p>
+                <label class=labelForm for="READ_employeeLastName">Last Name:</label>
+                <input class=inputForm type="text" id="READ_employeeLastName" name="READ_employeeLastName">
+                <br>
+                <br>
+                <label class=labelForm for="READ_employeeFirstName">First Name:</label>
+                <input class=inputForm type="text" id="READ_employeeFirstName" name="READ_employeeFirstName">
+                <br>
+                <br>
+                <label class=labelForm for="READ_phoneNumber">Phone Number:</label>
+                <input class=inputForm type="tel" id="READ_phoneNumber" name="READ_phoneNumber" pattern="[0-9]{3})[0-9]{3}-[0-9]{4}" placeholder="XXX-XXX-XXXX">
+                <br>
+                <br>
+                <label class=labelForm for="READ_addressLine1">Address Line 1:</label>
+                <input class=inputForm type="text" id="READ_addressLine1" name="READ_addressLine1">
+                <br>
+                <br>
+                <label class=labelForm for="READ_addressLine2">Address Line 2:</label>
+                <input class=inputForm type="text" id="READ_addressLine2" name="READ_addressLine2">
+                <br>
+                <br>
+                <label class=labelForm for="READ_city">City:</label>
+                <input class=inputForm type="text" id="READ_city" name="READ_city">
+                <br>
+                <br>
+                <label class=labelForm for="READ_employeeState">State:</label>
+                <select class=inputForm id="READ_employeeState" name="READ_employeeState">
+                    <option value=""></option>
+                    <option value="AL">Alabama</option>
+                    <option value="AK">Alaska</option>
+                    <option value="AZ">Arizona</option>
+                    <option value="AR">Arkansas</option>
+                    <option value="CA">California</option>
+                    <option value="CO">Colorado</option>
+                    <option value="CT">Connecticut</option>
+                    <option value="DE">Delaware</option>
+                    <option value="DC">District Of Columbia</option>
+                    <option value="FL">Florida</option>
+                    <option value="GA">Georgia</option>
+                    <option value="HI">Hawaii</option>
+                    <option value="ID">Idaho</option>
+                    <option value="IL">Illinois</option>
+                    <option value="IN">Indiana</option>
+                    <option value="IA">Iowa</option>
+                    <option value="KS">Kansas</option>
+                    <option value="KY">Kentucky</option>
+                    <option value="LA">Louisiana</option>
+                    <option value="ME">Maine</option>
+                    <option value="MD">Maryland</option>
+                    <option value="MA">Massachusetts</option>
+                    <option value="MI">Michigan</option>
+                    <option value="MN">Minnesota</option>
+                    <option value="MS">Mississippi</option>
+                    <option value="MO">Missouri</option>
+                    <option value="MT">Montana</option>
+                    <option value="NE">Nebraska</option>
+                    <option value="NV">Nevada</option>
+                    <option value="NH">New Hampshire</option>
+                    <option value="NJ">New Jersey</option>
+                    <option value="NM">New Mexico</option>
+                    <option value="NY">New York</option>
+                    <option value="NC">North Carolina</option>
+                    <option value="ND">North Dakota</option>
+                    <option value="OH">Ohio</option>
+                    <option value="OK">Oklahoma</option>
+                    <option value="OR">Oregon</option>
+                    <option value="PA">Pennsylvania</option>
+                    <option value="RI">Rhode Island</option>
+                    <option value="SC">South Carolina</option>
+                    <option value="SD">South Dakota</option>
+                    <option value="TN">Tennessee</option>
+                    <option value="TX">Texas</option>
+                    <option value="UT">Utah</option>
+                    <option value="VT">Vermont</option>
+                    <option value="VA">Virginia</option>
+                    <option value="WA">Washington</option>
+                    <option value="WV">West Virginia</option>
+                    <option value="WI">Wisconsin</option>
+                    <option value="WY">Wyoming</option>
+                </select>
+                <br>
+                <br>
+                <label class=labelForm for="READ_postalCode">Postal Code:</label>
+                <input class=inputForm type="number" id="READ_postalCode" name="READ_postalCode" placeholder="98102" min="10000" max="99999">
+                <br>
+                <br>
+                <label class=labelForm for="READ_email">Email:</label>
+                <input class=inputForm type="email" id="READ_email" name="READ_email">
+                <br>
+                <br>
+                <label class=labelForm for="READ_employeeStatus">Employee Status:</label>
+                <select class=inputForm id="READ_employeeStatus" name="READ_employeeStatus">
+                    <option value=""></option>
+                    <option value="active">active</option>
+                    <option value="termed">termed</option>
+                </select>
+                <br>
+                <br>
+                <button type="submit" onclick="if(this.form.checkValidity()){toggleShowHide('employeeDataTable'), constructEmployeeLookUpTable(), this.form.reset();}">Submit</button>
+            </form>
+            <script>
+                async function constructListAllTable(id) {
+                        await fetch('/' + id)
+                            .then(response => {
+                                return response.json();
+                            })
+                            .then(data => {
+                                appendData(data);
+                            })
+                            .catch(function (err) {
+                                console.log('error: ' + err);
+                            });
+                }
+            </script>
+            <script>
+                async function constructEmployeeLookUpTable() {
+                    event.preventDefault();
+                    const headerArray = [document.getElementById('READ_employeeID').id,
+                                        document.getElementById('READ_employeeLastName').id,
+                                        document.getElementById('READ_employeeFirstName').id,
+                                        document.getElementById('READ_phoneNumber').id,
+                                        document.getElementById('READ_addressLine1').id,
+                                        document.getElementById('READ_addressLine2').id,
+                                        document.getElementById('READ_city').id,
+                                        document.getElementById('READ_employeeState').id,
+                                        document.getElementById('READ_postalCode').id,
+                                        document.getElementById('READ_email').id,
+                                        document.getElementById('READ_employeeStatus').id];
+                    const dataArray =  [document.getElementById('READ_employeeID').value,
+                                        document.getElementById('READ_employeeLastName').value,
+                                        document.getElementById('READ_employeeFirstName').value,
+                                        document.getElementById('READ_phoneNumber').value,
+                                        document.getElementById('READ_addressLine1').value,
+                                        document.getElementById('READ_addressLine2').value,
+                                        document.getElementById('READ_city').value,
+                                        document.getElementById('READ_employeeState').value,
+                                        document.getElementById('READ_postalCode').value,
+                                        document.getElementById('READ_email').value,
+                                        document.getElementById('READ_employeeStatus').value];
+                        queryString = 'SELECT * FROM Employees WHERE'
+                        for (let i = 0; i < dataArray.length; i++) {
+                            if (dataArray[i] !== "") {
+                                let headerName = headerArray[i].substring(5);
+                                queryString = queryString + ' ' + headerName + " = '" + dataArray[i] + "' AND";
+                            }
+                        }
+                        queryString = queryString.substring(0, queryString.length - 4)
+                        queryString = queryString + ';'
+                        console.log(queryString)
+                    await fetch(`/employeeLookUp/${queryString}`)   
+                        .then(response => {
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.length !== 0){
+                                appendData(data);
+                            } else {
+                                alert("Employee not found.")
+                            }
+                        })
+                        .catch(function (err) {
+                            console.log('error: ' + err);
+                        });
+                }
+            </script>
+            <script>
+                function appendData(data) {
+                    let cols = [];
+                    for (let i = 0; i < data.length; i++) {
+                        for (let j in data[i]) {
+                            if (cols.indexOf(j) === -1) {
+                                cols.push(j);
+                            }
+                        }
+                    }
+                    cols.push('Update')
+                    let employeeTable = document.createElement('tbody');
+                    let tr = employeeTable.insertRow(-1);
+                    for (let i = 0; i < cols.length; i++) {
+                        let tableHeader = document.createElement("th");
+                        tableHeader.innerHTML = cols[i];
+                        tr.appendChild(tableHeader);
+                    }
+                    for (let i = 0; i < data.length; i++) {
+                        tr = employeeTable.insertRow(-1);
+                        rowNum = i + 1
+                        tr.setAttribute('id', 'rowNum' + rowNum)
+                        for (let j = 0; j < cols.length - 1; j++) {
+                            let newCell = tr.insertCell(-1);
+                            newCell.innerHTML = data[i][cols[j]];
+                        }
+                        let updateButton = tr.insertCell(-1);
+                        updateButton.innerHTML = '<button onclick="updateLineItem(id)">Update</button>'
+                        updateButton.firstChild.setAttribute('id', rowNum)
+                    }
+                    let employeeDataTableElement = document.getElementById("employeeDataTable");
+                    employeeDataTableElement.innerHTML = null;
+                    employeeDataTableElement.appendChild(employeeTable);
+                }
+            </script>
+            <form class=tableForm id="employeeDataTableForm" style="display:none;">
+                <table id="employeeDataTable"></table>
+            </form>            
+            <form class=basicForm id="employeeUpdateForm" style="display:none;">
+                <h2><b>Update Employee</b></h2>
+                <label class=labelForm for="UPDATE_employeeID">Employee ID:</label>
+                <input class=inputForm type="text" id="UPDATE_employeeID" name="UPDATE_employeeID" readonly="readonly">
+                <p><b>Please update the following information:</b></p>                
+                <label class=labelForm for="UPDATE_employeeLastName">Last Name:</label>
+                <input class=inputForm type="text" id="UPDATE_employeeLastName" name="UPDATE_employeeLastName" required>
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_employeeFirstName">First Name:</label>
+                <input class=inputForm type="text" id="UPDATE_employeeFirstName" name="UPDATE_employeeFirstName" required>
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_phoneNumber">Phone Number:</label>
+                <input class=inputForm type="tel" id="UPDATE_phoneNumber" name="UPDATE_phoneNumber" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="XXX-XXX-XXXX">
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_addressLine1">Address Line 1:</label>
+                <input class=inputForm type="text" id="UPDATE_addressLine1" name="UPDATE_addressLine1" required>
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_addressLine2">Address Line 2:</label>
+                <input class=inputForm type="text" id="UPDATE_addressLine2" name="UPDATE_addressLine2">
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_city">City:</label>
+                <input class=inputForm type="text" id="UPDATE_city" name="UPDATE_city" required>
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_employeeState">State:</label>
+                <select class=inputForm id="UPDATE_employeeState" name="UPDATE_employeeState" required>
+                    <option value="AL">Alabama</option>
+                    <option value="AK">Alaska</option>
+                    <option value="AZ">Arizona</option>
+                    <option value="AR">Arkansas</option>
+                    <option value="CA">California</option>
+                    <option value="CO">Colorado</option>
+                    <option value="CT">Connecticut</option>
+                    <option value="DE">Delaware</option>
+                    <option value="DC">District Of Columbia</option>
+                    <option value="FL">Florida</option>
+                    <option value="GA">Georgia</option>
+                    <option value="HI">Hawaii</option>
+                    <option value="ID">Idaho</option>
+                    <option value="IL">Illinois</option>
+                    <option value="IN">Indiana</option>
+                    <option value="IA">Iowa</option>
+                    <option value="KS">Kansas</option>
+                    <option value="KY">Kentucky</option>
+                    <option value="LA">Louisiana</option>
+                    <option value="ME">Maine</option>
+                    <option value="MD">Maryland</option>
+                    <option value="MA">Massachusetts</option>
+                    <option value="MI">Michigan</option>
+                    <option value="MN">Minnesota</option>
+                    <option value="MS">Mississippi</option>
+                    <option value="MO">Missouri</option>
+                    <option value="MT">Montana</option>
+                    <option value="NE">Nebraska</option>
+                    <option value="NV">Nevada</option>
+                    <option value="NH">New Hampshire</option>
+                    <option value="NJ">New Jersey</option>
+                    <option value="NM">New Mexico</option>
+                    <option value="NY">New York</option>
+                    <option value="NC">North Carolina</option>
+                    <option value="ND">North Dakota</option>
+                    <option value="OH">Ohio</option>
+                    <option value="OK">Oklahoma</option>
+                    <option value="OR">Oregon</option>
+                    <option value="PA">Pennsylvania</option>
+                    <option value="RI">Rhode Island</option>
+                    <option value="SC">South Carolina</option>
+                    <option value="SD">South Dakota</option>
+                    <option value="TN">Tennessee</option>
+                    <option value="TX">Texas</option>
+                    <option value="UT">Utah</option>
+                    <option value="VT">Vermont</option>
+                    <option value="VA">Virginia</option>
+                    <option value="WA">Washington</option>
+                    <option value="WV">West Virginia</option>
+                    <option value="WI">Wisconsin</option>
+                    <option value="WY">Wyoming</option>
+                </select>
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_postalCode">Postal Code:</label>
+                <input class=inputForm type="number" id="UPDATE_postalCode" name="UPDATE_postalCode" placeholder="98102" min="10000" max="99999" required>
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_email">Email:</label>
+                <input class=inputForm type="email" id="UPDATE_email" name="UPDATE_email" required>
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_employeeStatus">Employee Status:</label>
+                <select class=inputForm id="UPDATE_employeeStatus" name="UPDATE_employeeStatus" required>
+                    <option value="active">active</option>
+                    <option value="termed">termed</option>
+                </select>
+                <br>
+                <br>                
+                <button type="submit" onclick="if(this.form.checkValidity()){toggleShowHide('employeeDataTable'), constructEmployeeUpdateTable(), this.form.reset();}">Submit</button>
+            </form>
+            <script>
+                function updateLineItem(id) {
+                    event.preventDefault()
+                    rowNum = 'rowNum' + id
+                    cellNodes = document.getElementById(rowNum).childNodes
+                    let cellInfo = []
+                    for (let i = 0; i < cellNodes.length - 1; i++) {
+                        cellInfo[i] = cellNodes[i].innerHTML
+                    }
+                    toggleShowHide('employeeUpdate')
+                    document.getElementById('UPDATE_employeeID').value = cellInfo[0]                    
+                    document.getElementById('UPDATE_employeeLastName').value = cellInfo[2]
+                    document.getElementById('UPDATE_employeeFirstName').value = cellInfo[1]
+                    document.getElementById('UPDATE_phoneNumber').value = cellInfo[3]
+                    document.getElementById('UPDATE_addressLine1').value = cellInfo[4]
+                    document.getElementById('UPDATE_addressLine2').value = cellInfo[5]
+                    document.getElementById('UPDATE_city').value = cellInfo[6]
+                    document.getElementById('UPDATE_employeeState').value = cellInfo[7]
+                    document.getElementById('UPDATE_postalCode').value = cellInfo[8]
+                    document.getElementById('UPDATE_email').value = cellInfo[9]
+                    document.getElementById('UPDATE_employeeStatus').value = cellInfo[10]
+                }
+            </script>
+            <script>
+                async function constructEmployeeUpdateTable() {
+                    event.preventDefault();
+                    const employeeID = document.getElementById('UPDATE_employeeID').value
+                    const headerArray = [document.getElementById('UPDATE_employeeID').id,
+                                            document.getElementById('UPDATE_employeeLastName').id,
+                                            document.getElementById('UPDATE_employeeFirstName').id,
+                                            document.getElementById('UPDATE_phoneNumber').id,
+                                            document.getElementById('UPDATE_addressLine1').id,
+                                            document.getElementById('UPDATE_addressLine2').id,
+                                            document.getElementById('UPDATE_city').id,
+                                            document.getElementById('UPDATE_employeeState').id,
+                                            document.getElementById('UPDATE_postalCode').id,
+                                            document.getElementById('UPDATE_email').id,
+                                            document.getElementById('UPDATE_employeeStatus').id];
+                        const dataArray =  [document.getElementById('UPDATE_employeeID').value,
+                                            document.getElementById('UPDATE_employeeLastName').value,
+                                            document.getElementById('UPDATE_employeeFirstName').value,
+                                            document.getElementById('UPDATE_phoneNumber').value,
+                                            document.getElementById('UPDATE_addressLine1').value,
+                                            document.getElementById('UPDATE_addressLine2').value,
+                                            document.getElementById('UPDATE_city').value,
+                                            document.getElementById('UPDATE_employeeState').value,
+                                            document.getElementById('UPDATE_postalCode').value,
+                                            document.getElementById('UPDATE_email').value,
+                                            document.getElementById('UPDATE_employeeStatus').value];
+                    dataJSON =  '{ '
+                    for (let i = 0; i < dataArray.length; i++) {
+                        if (dataArray[i] === "") {
+                            dataArray[i] = null
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":' + dataArray[i] + ', '
+                        } else {
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":"' + dataArray[i] + '", '
+                        }
+                    }
+                    dataJSON = dataJSON.substring(0, dataJSON.length - 2) + ' }'
+                    dataJSON = JSON.parse(dataJSON)
+                    await fetch(`/employeeUpdate`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(dataJSON)
+                    })   
+                    .then(response => response.json())
+                    .then(data => {
+                        queryString = 'SELECT * FROM Employees WHERE employeeID = ' + employeeID + ';'
+                        fetch(`/employeeLookUp/${queryString}`)   
+                            .then(response => {
+                                return response.json();
+                            })
+                            .then(lookupData => appendData(lookupData))
+                            .catch(function (err) {
+                                console.log('error: ' + err);
+                            });
+                    })                    
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+                }
+            </script>            
+        </div>
+    </body>
+</html>

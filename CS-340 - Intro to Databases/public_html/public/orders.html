@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head class="orders">
+        <meta charset="utf-8">
+        <link rel="icon" href="./images/dog.ico" />
+        <title>Canine Munchies</title>
+        <link href=".\stylesheet\style.css" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap" rel="stylesheet">
+        <img src='./images/header-banner.jpg' alt="header-banner" id="header-banner" />
+    </head>
+    <body>
+        <div class="vertical-menu">
+            <a href="index.html">Home Page</a herf>
+            <a href="customers.html">Customers</a herf>
+            <a href="employees.html">Employees</a href>
+            <a href="orderDetails.html">Order Details</a href>
+            <a href="orders.html" class="active">Orders</a href>
+            <a href="products.html">Products</a href>
+        </div>
+        <div class="body-content">
+            <h1  class="page-title">Orders</h1>
+            <p>Please test this web app on Chrome.</p>
+            <div class="page-buttons">
+                <p><b>Please use one of the provided buttons to:</b></p>
+                <button type="button" id="orderAdd" onclick="toggleShowHide(id), addCustomerDropDown(id), addEmployeeDropDown(id)">Add New Order</button>
+                <inline>&emsp;</inline>
+                <button type="button" id="orderLookUp" onclick="toggleShowHide(id), addCustomerDropDown(id), addEmployeeDropDown(id)">Order Look-up</button>
+                <inline>&emsp;</inline>
+                <button type="submit" id="orderListAll" onclick="toggleShowHide('orderDataTable'), constructListAllTable(id)">List All Orders</button>
+                <inline>&emsp;</inline>
+                <button type="button" id="clearAll" onclick="toggleShowHide(id)">Clear All</button>
+                <br>
+                <br>
+                <script>
+                    async function addCustomerDropDown(id) {
+                        await fetch (`/customerDropDown`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (id === 'orderAdd') {
+                                parentNode = document.getElementById('CREATE_customerID')
+                            } else if (id === 'orderLookUp') {  
+                                parentNode = document.getElementById('READ_customerID')
+                                const newBlankNode = new Option() 
+                                parentNode.appendChild(newBlankNode)  
+                            }
+                            for (const i in data) {
+                                const customerID = data[i].customerID
+                                const firstName = data[i].contactFirstName
+                                const lastName = data[i].contactLastName
+                                const email = data[i].email
+                                const optionText = `ID: ${customerID} - ${lastName}, ${firstName}, ${email}`
+                                const newNode = new Option(optionText)
+                                parentNode.appendChild(newNode)
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                    }
+                </script> 
+                <script>
+                    async function addEmployeeDropDown(id) {
+                        await fetch (`/employeeDropDown`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (id === 'orderAdd') {
+                                parentNode = document.getElementById('CREATE_employeeID')
+                            } else if (id === 'orderLookUp') {
+                                parentNode = document.getElementById('READ_employeeID')
+                            }   
+                            const newBlankNode = new Option() 
+                            parentNode.appendChild(newBlankNode)                                             
+                            for (const i in data) {
+                                const employeeID = data[i].employeeID
+                                const firstName = data[i].employeeFirstName
+                                const lastName = data[i].employeeLastName
+                                const email = data[i].email
+                                const optionText = `ID: ${employeeID} - ${lastName}, ${firstName}, ${email}`
+                                const newNode = new Option(optionText)                                       
+                                parentNode.appendChild(newNode)
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                    }
+                </script>                          
+                <script>
+                    function toggleShowHide(id) {
+                        const elementName = id + "Form";
+                        try {
+                            document.getElementById("orderAddForm").style.display="none"
+                        } finally {}
+                        try {
+                            document.getElementById("orderLookUpForm").style.display="none"
+                        } finally {}   
+                        try {
+                            document.getElementById("orderDataTableForm").style.display="none"
+                        } finally {}
+                        try {
+                            document.getElementById("orderUpdateForm").style.display="none"
+                        } finally {}
+                        try {
+                            let parent = document.getElementById("orderDataTable")
+                            while(parent.hasChildNodes()) {
+                                parent.removeChild(parent.firstChild)
+                            }
+                        } finally {}
+                        try {
+                            let parent = document.getElementById("CREATE_customerID")
+                            while(parent.hasChildNodes()) {
+                                parent.removeChild(parent.firstChild)
+                            }
+                        } finally {}
+                        try {
+                            let parent = document.getElementById("CREATE_employeeID")
+                            while(parent.hasChildNodes()) {
+                                parent.removeChild(parent.firstChild)
+                            }
+                        } finally {}
+                        try {
+                            let parent = document.getElementById("READ_customerID")
+                            while(parent.hasChildNodes()) {
+                                parent.removeChild(parent.firstChild)
+                            }
+                        } finally {}
+                        try {
+                            let parent = document.getElementById("READ_employeeID")
+                            while(parent.hasChildNodes()) {
+                                parent.removeChild(parent.firstChild)
+                            }
+                        } finally {}                                                                        
+                        if (elementName !== "clearAllForm") {
+                            document.getElementById(elementName).style.display="block";   
+                        }
+                    }
+                </script>
+            </div>
+            <br>
+            <br>
+            <form class=basicForm id="orderAddForm" style="display:none;" action="/orderAdd" method="POST">
+                <h2><b>Add New Order</b></h2>
+                <p><b>Please enter the following information:</b></p>                
+                <label class=labelForm for="CREATE_orderDate">Order Date:</label>
+                <input class=inputForm type="date" id="CREATE_orderDate" name="CREATE_orderDate" required>
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_requiredDate">Required Date:</label>
+                <input class=inputForm type="date" id="CREATE_requiredDate" name="CREATE_requiredDate" required>
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_shippedDate">Shipped Date:</label>
+                <input class=inputForm type="date" id="CREATE_shippedDate" name="CREATE_shippedDate" required>
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_orderStatus">Order Status:</label>
+                <select class=inputForm id="CREATE_orderStatus" name="CREATE_orderStatus" required>
+                    <option value="" disabled selected hidden>Select an order status</option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="shipped">Shipped</option>
+                </select>
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_comments">Comments:</label>
+                <textarea class=inputForm type="text" id="CREATE_comments" name="CREATE_comments" rows="7" cols="50" placeholder="e.g. Order cancelled per customer request on 02/02/2022."></textarea>
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_customerID">Customer:</label>
+                <select class=inputForm id="CREATE_customerID" name="CREATE_customerID" required>
+                </select>
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_employeeID">Employee:</label>
+                <select class=inputForm id="CREATE_employeeID" name="CREATE_employeeID">
+                    <option></option>
+                </select>
+                <br>
+                <br>
+                <button type="submit" onclick="if(this.form.checkValidity()){constructOrderAddTable(), toggleShowHide('orderDataTable'), this.form.reset();}">Submit</button>
+            </form>
+            <script>
+                async function constructOrderAddTable() {
+                    event.preventDefault();
+                    const headerArray = [document.getElementById('CREATE_orderDate').id,
+                                        document.getElementById('CREATE_requiredDate').id,
+                                        document.getElementById('CREATE_shippedDate').id,
+                                        document.getElementById('CREATE_orderStatus').id,
+                                        document.getElementById('CREATE_comments').id,
+                                        document.getElementById('CREATE_customerID').id,
+                                        document.getElementById('CREATE_employeeID').id];            
+                    const dataArray =  [document.getElementById('CREATE_orderDate').value,
+                                        document.getElementById('CREATE_requiredDate').value,
+                                        document.getElementById('CREATE_shippedDate').value,
+                                        document.getElementById('CREATE_orderStatus').value,
+                                        document.getElementById('CREATE_comments').value,
+                                        document.getElementById('CREATE_customerID').value,
+                                        document.getElementById('CREATE_employeeID').value];
+                    dataJSON =  '{ '
+                    for (let i = 0; i < dataArray.length; i++) {
+                        if (dataArray[i] === "") {
+                            dataArray[i] = null
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":' + dataArray[i] + ', '
+                        } else if (headerArray[i] === 'CREATE_customerID') {
+                            for (let j = 0; j < dataArray[i].length; j++) {
+                                if (dataArray[i].charAt(j) === '-') {
+                                    dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":"' + dataArray[i].substring(4, j - 1) + '", '
+                                }
+                            }
+                        } else if (headerArray[i] === 'CREATE_employeeID') {
+                            for (let k = 0; k < dataArray[i].length; k++) {
+                                if (dataArray[i].charAt(k) === '-') {
+                                    dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":"' + dataArray[i].substring(4, k - 1) + '", '
+                                }
+                            }                            
+                        } else {
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":"' + dataArray[i] + '", '
+                        }
+                    }
+                    dataJSON = dataJSON.substring(0, dataJSON.length - 2) + ' }'
+                    dataJSON = JSON.parse(dataJSON)
+                    console.log(dataJSON)
+                    await fetch(`/orderAdd`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(dataJSON)
+                    })   
+                    .then(response => response.json())
+                    .then(data => {
+                        const orderNumber = data['insertId']
+                        queryString = 'SELECT orderNumber, orderDate, requiredDate, shippedDate, orderStatus, comments, contactFirstName, contactLastName, employeeFirstName, employeeLastName FROM Orders INNER JOIN Customers ON Customers.customerID = Orders.customerID LEFT JOIN Employees ON Employees.employeeID = Orders.employeeID WHERE orderNumber = ' + orderNumber + ';'
+                        fetch(`/orderLookUp/${queryString}`)   
+                            .then(response => {
+                                return response.json();
+                            })
+                            .then(lookupData => {
+                                if (lookupData.length !== 0){
+                                    
+                                    lookupData.forEach(value => {
+                                        let updatedData = value.orderDate;
+                                        let updateDataIndex = updatedData.indexOf('T');
+                                        value.orderDate = (updatedData.substring(0, updateDataIndex));
+                                    })
+                                    lookupData.forEach(value => {
+                                        let updatedData = value.requiredDate;
+                                        let updateDataIndex = updatedData.indexOf('T');
+                                        value.requiredDate = (updatedData.substring(0, updateDataIndex));
+                                    })
+                                    lookupData.forEach(value => {
+                                        let updatedData = value.shippedDate;
+                                        let updateDataIndex = updatedData.indexOf('T');
+                                        value.shippedDate = (updatedData.substring(0, updateDataIndex));
+                                    })
+                                }
+                                appendData(lookupData)})
+                                
+                            
+                            .catch(function (err) {
+                                console.log('error: ' + err);
+                            });
+                     })
+                    .catch((error) => {
+                        alert("Invalid request")
+                        console.error('Error:', error);
+                    });
+                }
+            </script>
+            <form class=basicForm id="orderLookUpForm" style="display:none;" action="/orderLookUp" method="GET" >
+                <h2><b>Order Look-up</b></h2>
+                <p><b>If available, please enter the Order Number:</b></p> 
+                <label class=labelForm for="READ_orderNumber">Order Number:</label>
+                <input class=inputForm type="number" id="READ_orderNumber" name="READ_orderNumber" min="1" max="99999">
+                <br>
+                <br>
+                <p><b>Otherwise, please enter the following information:</b></p>  
+                <label class=labelForm for="READ_orderDate">Order Date:</label>
+                <input class=inputForm type="date" id="READ_orderDate" name="READ_orderDate">
+                <br>
+                <br>
+                <label class=labelForm for="READ_requiredDate">Required Date:</label>
+                <input class=inputForm type="date" id="READ_requiredDate" name="READ_requiredDate">
+                <br>
+                <br>
+                <label class=labelForm for="READ_shippedDate">Shipped Date:</label>
+                <input class=inputForm type="date" id="READ_shippedDate" name="READ_shippedDate">
+                <br>
+                <br>
+                <label class=labelForm for="READ_orderStatus">Order Status:</label>
+                <select class=inputForm id="READ_orderStatus" name="READ_orderStatus">
+                    <option></option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="shipped">Shipped</option>
+                </select>
+                <br>
+                <br>
+                <label class=labelForm for="READ_customerID">Customer:</label>
+                <select class=inputForm id="READ_customerID" name="READ_customerID">
+                <option></option>
+                </select>
+                <br>
+                <br>
+                <label class=labelForm for="READ_employeeID">Employee:</label>
+                <select class=inputForm id="READ_employeeID" name="READ_employeeID">
+                <option></option>
+                </select>
+                <br>
+                <br>
+                <button type="submit" onclick="if(this.form.checkValidity()){constructOrderLookUpTable(), toggleShowHide('orderDataTable'), this.form.reset();}">Submit</button>
+            </form>
+            <script>
+                async function constructListAllTable(id) {
+                        await fetch('/' + id)
+                            .then(response => {
+                                return response.json();
+                            })
+                            .then(data => {
+                                appendData(data);
+                            })
+                            .catch(function (err) {
+                                console.log('error: ' + err);
+                            });
+                }
+            </script>
+            <script>
+                async function constructOrderLookUpTable() {
+                    event.preventDefault();
+                    const headerArray = [document.getElementById('READ_orderNumber').id,
+                                        document.getElementById('READ_orderDate').id,
+                                        document.getElementById('READ_requiredDate').id,
+                                        document.getElementById('READ_shippedDate').id,
+                                        document.getElementById('READ_orderStatus').id,
+                                        document.getElementById('READ_customerID').id,
+                                        document.getElementById('READ_employeeID').id];
+                    const dataArray =  [document.getElementById('READ_orderNumber').value,
+                                        document.getElementById('READ_orderDate').value,
+                                        document.getElementById('READ_requiredDate').value,
+                                        document.getElementById('READ_shippedDate').value,
+                                        document.getElementById('READ_orderStatus').value,
+                                        document.getElementById('READ_customerID').value,
+                                        document.getElementById('READ_employeeID').value];
+                    queryString = 'SELECT orderNumber, orderDate, requiredDate, shippedDate, orderStatus, comments, contactFirstName, contactLastName, employeeFirstName, employeeLastName FROM Orders INNER JOIN Customers ON Customers.customerID = Orders.customerID LEFT JOIN Employees ON Employees.employeeID = Orders.employeeID WHERE '
+                    if (dataArray[0] !== "") {
+                        queryString = queryString + 'orderNumber=' + dataArray[0]
+                    } else {
+                        for (let i = 1; i < dataArray.length; i++) {
+                            if (dataArray[i] !== "") {
+                                if (headerArray[i] === 'READ_customerID') {
+                                    for (let j = 0; j < dataArray[i].length; j++) {
+                                        if (dataArray[i].charAt(j) === '-') {
+                                            queryString = queryString + 'Customers.' + headerArray[i].substring(5) + '=' + dataArray[i].substring(4, j - 1) + ' AND '
+                                        }
+                                    }
+                                } else if (headerArray[i] === 'READ_employeeID') {
+                                    for (let k = 0; k < dataArray[i].length; k++) {
+                                        if (dataArray[i].charAt(k) === '-') {
+                                            queryString = queryString + 'Employees.' + headerArray[i].substring(5) + '=' + dataArray[i].substring(4, k - 1) + ' AND '
+                                        }
+                                    }                            
+                                } else {
+                                    queryString = queryString + 'Orders.' + headerArray[i].substring(5) + '="' + dataArray[i] + '" AND '
+                                }
+                            }
+                        }
+                        queryString = queryString.substring(0, queryString.length - 4)
+                    }           
+                    queryString = queryString + ' ORDER BY orderNumber;'
+                    if (document.getElementById('READ_orderNumber').value === "") {
+                        if (document.getElementById('READ_orderDate').value === "") {
+                            if (document.getElementById('READ_requiredDate').value === "") {
+                                if (document.getElementById('READ_shippedDate').value === "") {
+                                    if (document.getElementById('READ_orderStatus').value === "") {
+                                        if (document.getElementById('READ_customerID').value === "") {
+                                            if (document.getElementById('READ_employeeID').value === "") {
+                                                queryString = 'SELECT orderNumber, orderDate, requiredDate, shippedDate, orderStatus, comments, contactFirstName, contactLastName, employeeFirstName, employeeLastName FROM Orders INNER JOIN Customers ON Customers.customerID = Orders.customerID LEFT JOIN Employees ON Employees.employeeID = Orders.employeeID ORDER BY orderNumber;'
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    await fetch(`/orderLookUp/${queryString}`)   
+                        .then(response => {
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.length !== 0){
+                                data.forEach(value => {
+                                    let updatedData = value.orderDate;
+                                    let updateDataIndex = updatedData.indexOf('T');
+                                    value.orderDate = (updatedData.substring(0, updateDataIndex));
+                                })
+                                data.forEach(value => {
+                                    let updatedData = value.requiredDate;
+                                    let updateDataIndex = updatedData.indexOf('T');
+                                    value.requiredDate = (updatedData.substring(0, updateDataIndex));
+                                })
+                                data.forEach(value => {
+                                    let updatedData = value.shippedDate;
+                                    let updateDataIndex = updatedData.indexOf('T');
+                                    value.shippedDate = (updatedData.substring(0, updateDataIndex));
+                                })
+                                appendData(data);
+                            } else {
+                                alert("Order not found.")
+                            }
+                        })
+                        .catch(function (err) {
+                            console.log('error: ' + err);
+                        });
+                }
+            </script>
+            <script>
+                function appendData(data) {
+                    let cols = [];
+                    for (let i = 0; i < data.length; i++) {
+                        for (let j in data[i]) {
+                            if (cols.indexOf(j) === -1) {
+                                cols.push(j);
+                            }
+                        }
+                    }
+                    cols.push('Update')
+                    let orderTable = document.createElement('tbody');
+                    let tr = orderTable.insertRow(-1);
+                    for (let i = 0; i < cols.length; i++) {
+                        let tableHeader = document.createElement("th");
+                        tableHeader.innerHTML = cols[i];
+                        tr.appendChild(tableHeader);
+                    }
+                    for (let i = 0; i < data.length; i++) {
+                        tr = orderTable.insertRow(-1);
+                        rowNum = i + 1
+                        tr.setAttribute('id', 'rowNum' + rowNum)
+                        for (let j = 0; j < cols.length - 1; j++) {
+                            let newCell = tr.insertCell(-1);
+                            newCell.innerHTML = data[i][cols[j]];
+                        }
+                        let updateButton = tr.insertCell(-1);
+                        updateButton.innerHTML = '<button onclick="updateLineItem(id)">Update</button>'
+                        updateButton.firstChild.setAttribute('id', rowNum)
+                    }
+                    let orderDataTableElement = document.getElementById("orderDataTable");
+                    orderDataTableElement.innerHTML = null;
+                    orderDataTableElement.appendChild(orderTable);
+                }
+            </script>
+            <form class=tableForm id="orderDataTableForm" style="display:none;">
+                <table id="orderDataTable"></table>
+            </form>
+            <form class=basicForm id="orderUpdateForm" style="display:none;">
+                <h2><b>Update Order</b></h2>
+                <label class=labelForm for="UPDATE_orderNumber">Order ID:</label>
+                <input class=inputform type="text" id="UPDATE_orderNumber" name="UPDATE_orderNumber" readonly="readonly">
+                <p><b>Please update the following information:</b></p>                
+                <label class=labelForm for="UPDATE_orderDate">Order Date:</label>
+                <input class=inputForm type="date" id="UPDATE_orderDate" name="UPDATE_orderDate" required>
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_requiredDate">Required Date:</label>
+                <input class=inputForm type="date" id="UPDATE_requiredDate" name="UPDATE_requiredDate" required>
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_shippedDate">Shipped Date:</label>
+                <input class=inputForm type="date" id="UPDATE_shippedDate" name="UPDATE_shippedDate" required>
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_orderStatus">Order Status:</label>
+                <select class=inputForm id="UPDATE_orderStatus" name="UPDATE_orderStatus" required>
+                    <option value="" disabled selected hidden>Select an order status</option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="shipped">Shipped</option>
+                </select>
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_comments">Comments:</label>
+                <textarea class=inputForm type="text" id="UPDATE_comments" name="UPDATE_comments" rows="7" cols="50" placeholder="e.g. Order cancelled per customer request on 02/02/2022."></textarea>
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_customerID">Customer ID:</label>
+                <input class=inputForm type="number" id="UPDATE_customerID" name="UPDATE_customerID" min="1" max="99999" required>
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_employeeID">Employee ID:</label>
+                <input class=inputForm type="number" id="UPDATE_employeeID" name="UPDATE_employeeID" min="1" max="999">
+                <br>
+                <br>
+                <button type="submit" onclick="if(this.form.checkValidity()){toggleShowHide('orderDataTable'), constructOrderUpdateTable(), this.form.reset();}">Submit</button>
+            </form>
+            <script>
+                async function updateLineItem(id) {
+                    event.preventDefault()
+                    rowNum = 'rowNum' + id
+                    cellNodes = document.getElementById(rowNum).childNodes
+                    let cellInfo = []
+                    for (let i = 0; i < cellNodes.length - 1; i++) {
+                        cellInfo[i] = cellNodes[i].innerHTML
+                    }
+                    toggleShowHide('orderUpdate')
+                    document.getElementById('UPDATE_orderNumber').value = cellInfo[0]
+                    document.getElementById('UPDATE_orderDate').value = cellInfo[1]
+                    document.getElementById('UPDATE_requiredDate').value = cellInfo[2]
+                    document.getElementById('UPDATE_shippedDate').value = cellInfo[3]
+                    document.getElementById('UPDATE_orderStatus').value = cellInfo[4]
+                    document.getElementById('UPDATE_comments').value = cellInfo[5]
+                    contactFirstName = cellInfo[6]
+                    contactLastName = cellInfo[7]
+                    queryString = `SELECT customerID FROM Customers WHERE contactFirstName = '${contactFirstName}' AND contactLastName = '${contactLastName}'`
+                                fetch(`/customerLookUp/${queryString}`)
+                                    .then(response => {
+                                        return response.json();
+                                    })
+                                    .then (convertData => {
+                                        document.getElementById('UPDATE_customerID').value = convertData[0].customerID
+                                    })
+                                    .catch(function (err) {
+                                        console.log('error: ' + err);
+                                    });
+                    employeeFirstName = cellInfo[8]
+                    employeeLastName = cellInfo[9]
+                    if (employeeFirstName !== "" && employeeLastName !== "") {
+                        queryString = `SELECT employeeID FROM Employees WHERE employeeFirstName = '${employeeFirstName}' AND employeeLastName = '${employeeLastName}'`
+                                    fetch(`/employeeLookUp/${queryString}`)
+                                        .then(response => {
+                                            return response.json();
+                                        })
+                                        .then (convertData => {
+                                            document.getElementById('UPDATE_employeeID').value = convertData[0].employeeID
+                                        })
+                                        .catch(function (err) {
+                                            console.log('error: ' + err);
+                                        });
+                    }
+                }
+            </script>
+            <script>
+                async function constructOrderUpdateTable() {
+                    event.preventDefault();
+                    const orderNumber = document.getElementById('UPDATE_orderNumber').value
+                    const headerArray = [document.getElementById('UPDATE_orderNumber').id,
+                                        document.getElementById('UPDATE_orderDate').id,
+                                        document.getElementById('UPDATE_requiredDate').id,
+                                        document.getElementById('UPDATE_shippedDate').id,
+                                        document.getElementById('UPDATE_orderStatus').id,
+                                        document.getElementById('UPDATE_comments').id,
+                                        document.getElementById('UPDATE_customerID').id,
+                                        document.getElementById('UPDATE_employeeID').id];               
+                    const dataArray =  [document.getElementById('UPDATE_orderNumber').value,
+                                        document.getElementById('UPDATE_orderDate').value,
+                                        document.getElementById('UPDATE_requiredDate').value,
+                                        document.getElementById('UPDATE_shippedDate').value,
+                                        document.getElementById('UPDATE_orderStatus').value,
+                                        document.getElementById('UPDATE_comments').value,
+                                        document.getElementById('UPDATE_customerID').value,
+                                        document.getElementById('UPDATE_employeeID').value];
+                    dataJSON =  '{ '
+                    for (let i = 0; i < dataArray.length; i++) {
+                        if (dataArray[i] === "") {
+                            dataArray[i] = null
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":' + dataArray[i] + ', '
+                        } else {
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":"' + dataArray[i] + '", '
+                        }
+                    }
+                    dataJSON = dataJSON.substring(0, dataJSON.length - 2) + ' }'
+                    dataJSON = JSON.parse(dataJSON)
+                    await fetch(`/orderUpdate`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(dataJSON)
+                    })   
+                    .then(response => response.json())
+                    .then(data => {
+                        queryString = 'SELECT orderNumber, orderDate, requiredDate, shippedDate, orderStatus, comments, contactFirstName, contactLastName, employeeFirstName, employeeLastName FROM Orders INNER JOIN Customers ON Customers.customerID = Orders.customerID LEFT JOIN Employees ON Employees.employeeID = Orders.employeeID WHERE orderNumber = ' + orderNumber + ';'
+                        console.log(queryString)
+                        fetch(`/orderLookUp/${queryString}`)   
+                            .then(response => {
+                                return response.json();
+                            })
+                            .then(lookupData => {
+                                if (lookupData.length !== 0){
+                                    
+                                    lookupData.forEach(value => {
+                                        let updatedData = value.orderDate;
+                                        let updateDataIndex = updatedData.indexOf('T');
+                                        value.orderDate = (updatedData.substring(0, updateDataIndex));
+                                    })
+                                    lookupData.forEach(value => {
+                                        let updatedData = value.requiredDate;
+                                        let updateDataIndex = updatedData.indexOf('T');
+                                        value.requiredDate = (updatedData.substring(0, updateDataIndex));
+                                    })
+                                    lookupData.forEach(value => {
+                                        let updatedData = value.shippedDate;
+                                        let updateDataIndex = updatedData.indexOf('T');
+                                        value.shippedDate = (updatedData.substring(0, updateDataIndex));
+                                    })
+                                }
+                                appendData(lookupData)})
+                                
+                            
+                            .catch(function (err) {
+                                console.log('error: ' + err);
+                            });
+                     })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        alert('Invalid request')
+                    });
+                }
+            </script>
+        </div>
+    </body>
+</html>

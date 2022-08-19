@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head class="products">
+        <meta charset="utf-8">
+        <link rel="icon" href="./images/dog.ico" />
+        <title>Canine Munchies</title>
+        <link href=".\stylesheet\style.css" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap" rel="stylesheet">
+        <img src='./images/header-banner.jpg' alt="header-banner" id="header-banner" />
+    </head>
+    <body>
+        <div class="vertical-menu">
+            <a href="index.html">Home Page</a herf>
+            <a href="customers.html">Customers</a herf>
+            <a href="employees.html">Employees</a href>
+            <a href="orderDetails.html">Order Details</a href>
+            <a href="orders.html">Orders</a href>
+            <a href="products.html" class="active">Products</a href>
+        </div>
+        <div class="body-content">
+            <h1  class="page-title">Products</h1>
+            <p>Please test this web app on Chrome.</p>
+            <div class="page-buttons">
+                <p><b>Please use one of the provided buttons to:</b></p>
+                <button type="button" id="productAdd" onclick="toggleShowHide(id)">Add New Product</button>
+                <inline>&emsp;</inline>
+                <button type="button" id="productLookUp" onclick="toggleShowHide(id), addProductDropDown()">Product Look-up</button>
+                <inline>&emsp;</inline>
+                <button type="submit" id="productListAll" onclick="toggleShowHide('productDataTable'), constructListAllTable(id)">List All Products</button>
+                <inline>&emsp;</inline>
+                <button type="submit" id="productReport" onclick="toggleShowHide('productDataTable'), constructProductReportTable()">Run Product Report</button>
+                <inline>&emsp;</inline>
+                <button type="button" id="clearAll" onclick="toggleShowHide(id)">Clear All</button>
+                <br>
+                <br>
+                <script>
+                    async function addProductDropDown() {
+                        await fetch (`/productDropDown`)
+                        .then(response => response.json())
+                        .then(data => {
+                            let parentNode = document.getElementById('READ_productName')
+                            let newBlankNode = new Option()
+                            parentNode.appendChild(newBlankNode)
+                            for (const i in data) {
+                                let productCode = data[i].productCode
+                                let productName = data[i].productName
+                                let optionText = `${productCode} - ${productName}`
+                                let newNode = new Option(optionText)
+                                parentNode.appendChild(newNode)
+                            }
+
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                    }
+                </script>                
+                <script>
+                    function toggleShowHide(id) {
+                        const elementName = id + "Form";
+                        try {
+                            document.getElementById("productAddForm").style.display="none"
+                        } finally {}
+                        try {
+                            document.getElementById("productLookUpForm").style.display="none"
+                        } finally {}  
+                        try {
+                            document.getElementById("productDataTableForm").style.display="none"
+                        } finally {}
+                        try {
+                            document.getElementById("productUpdateForm").style.display="none"
+                        } finally {}
+                        try {
+                            let parent = document.getElementById("productDataTable")
+                            while(parent.hasChildNodes()) {
+                                parent.removeChild(parent.firstChild)
+                            }
+                        } finally {}
+                        try {
+                            let parent = document.getElementById("READ_productName")
+                            while(parent.hasChildNodes()) {
+                                parent.removeChild(parent.firstChild)
+                            }
+                        } finally {}                        
+                        if (elementName !== "clearAllForm") {
+                            document.getElementById(elementName).style.display="block";   
+                        }
+                    }
+                </script>
+            </div>
+            <br>
+            <br>
+            <form class=basicForm id="productAddForm" style="display:none;" action="/productAdd" method="POST">
+                <h2><b>Add New Product</b></h2>
+                <p><b>Please enter the following information:</b></p>                
+                <label class=labelForm for="CREATE_productName">Product Name:</label>
+                <input class=inputForm type="text" id="CREATE_productName" name="CREATE_productName" required>
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_productDescription">Product Description:</label>
+                <textarea class=inputForm type="text" id="CREATE_productDescription" name="CREATE_productDescription" rows="7" cols="50" required></textarea>
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_legacyProduct">Legacy Product:</label>
+                <select class=inputForm id="CREATE_legacyProduct" name="CREATE_legacyProduct" required>
+                    <option value=1>Yes</option>
+                    <option value=0>No</option>
+                </select>
+                <br>
+                <br>
+                <button type="submit" onclick="if(this.form.checkValidity()){toggleShowHide('productDataTable'), constructProductAddTable(), this.form.reset();}">Submit</button>
+            </form>
+            <script>
+                async function constructProductAddTable() {
+                    event.preventDefault();
+                    const headerArray = [document.getElementById('CREATE_productName').id,
+                                            document.getElementById('CREATE_productDescription').id,
+                                            document.getElementById('CREATE_legacyProduct').id];
+                        const dataArray =  [document.getElementById('CREATE_productName').value,
+                                            document.getElementById('CREATE_productDescription').value,
+                                            document.getElementById('CREATE_legacyProduct').value];
+                    dataJSON =  '{ '
+                    for (let i = 0; i < dataArray.length; i++) {
+                        if (dataArray[i] === "") {
+                            dataArray[i] = null
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":' + dataArray[i] + ', '
+                        } else {
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":"' + dataArray[i] + '", '
+                        }
+                    }
+                    dataJSON = dataJSON.substring(0, dataJSON.length - 2) + ' }'
+                    dataJSON = JSON.parse(dataJSON)
+                    await fetch(`/productAdd`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(dataJSON)
+                    })   
+                    .then(response => response.json())
+                    .then(data => {
+                        const productCode = data['insertId']
+                        queryString = 'SELECT * FROM Products WHERE productCode = ' + productCode + ';'
+                        fetch(`/productLookUp/${queryString}`)   
+                            .then(response => {
+                                return response.json();
+                            })
+                            .then(lookupData => appendData(lookupData))
+                            .catch(function (err) {
+                                console.log('error: ' + err);
+                            });
+                    })
+                    .catch((error) => {
+                        alert("Invalid request")
+                        console.error('Error:', error);
+                    });
+                }
+            </script>
+            <form class=basicForm id="productLookUpForm" style="display:none;" action="/productLookUp" method="POST">
+                <h2><b>Product Look-up</b></h2>
+                <p><b>If available, please enter the following information:</b></p>  
+                <label class=labelForm for="READ_productName">Product Name:</label>
+                <select class=inputForm id="READ_productName" name="READ_productName">
+                    <option></option>
+                </select>
+                <br>
+                <br>                            
+                <label class=labelForm for="READ_legacyProduct">Legacy Product:</label>
+                <select class=inputForm id="READ_legacyProduct" name="READ_legacyProduct">
+                    <option value=""></option>
+                    <option value=1>Yes</option>
+                    <option value=0>No</option>
+                </select>
+                <br>
+                <br>
+                <button type="submit" onclick="if(this.form.checkValidity()){constructProductLookUpTable(), toggleShowHide('productDataTable'), this.form.reset();}">Submit</button>
+            </form>
+            <script>
+                async function constructListAllTable(id) {
+                        await fetch('/' + id)
+                            .then(response => {
+                                return response.json();
+                            })
+                            .then(data => {
+                                appendData(data);
+                            })
+                            .catch(function (err) {
+                                console.log('error: ' + err);
+                            });
+                }
+            </script>
+            <script>
+                async function constructProductLookUpTable() {
+                    event.preventDefault();
+                    const headerArray = [document.getElementById('READ_productName').id,
+                                        document.getElementById('READ_legacyProduct').id];
+                    const dataArray =  [document.getElementById('READ_productName').value,
+                                        document.getElementById('READ_legacyProduct').value];
+                    queryString = 'SELECT * FROM Products WHERE '
+                    for (let i = 0; i < dataArray.length; i++) {
+                        let headerName = headerArray[i].substring(5);
+                        if (headerName === 'productName') {
+                            for (let j = 0; j < dataArray[i].length; j++) {
+                                        if (dataArray[i].charAt(j) === '-') {
+                                            queryString = queryString + 'productCode' + " = '" + dataArray[i].substring(0, j - 1) + "' AND "
+                                        }
+                                    }    
+                        } else if (dataArray[i] !== "") {
+                            queryString = queryString + ' ' + headerName + " = '" + dataArray[i] + "' AND";
+                        }
+                    }
+                    queryString = queryString.substring(0, queryString.length - 4)
+                    queryString = queryString + ';'
+                    console.log(queryString)
+                    await fetch(`/productLookUp/${queryString}`)   
+                        .then(response => {
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.length !== 0){
+                                appendData(data);
+                            } else {
+                                alert("Product not found.")
+                            }
+                        })
+                        .catch(function (err) {
+                            console.log('error: ' + err);
+                        });
+                }
+            </script>
+            <script>
+                async function constructProductReportTable() {
+                    event.preventDefault();
+                    const headerArray = [document.getElementById('READ_productName').id,
+                                        document.getElementById('READ_legacyProduct').id];
+                    queryString = `SELECT Products.productName, SUM(IFNULL(OrderDetails.quantityOrdered,0)) as qty FROM OrderDetails RIGHT JOIN Products on Products.productCode = OrderDetails.productCode WHERE Products.legacyProduct = 'active' GROUP BY Products.productName ORDER BY qty DESC;`
+                    await fetch(`/productLookUp/${queryString}`)   
+                        .then(response => {
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.length !== 0){
+                                appendData(data);
+                                let parent = document.getElementById("productDataTable").childNodes[0].childNodes
+                                for (i = 0; i < parent.length; i++) {
+                                    parent[i].childNodes[2].remove()
+                                }
+                            } else {
+                                alert("Product not found.")
+                            }
+                        })
+                        .catch(function (err) {
+                            console.log('error: ' + err);
+                        });
+                }
+            </script>
+            <script>
+                function appendData(data) {
+                    let cols = [];
+                    for (let i = 0; i < data.length; i++) {
+                        for (let j in data[i]) {
+                            if (cols.indexOf(j) === -1) {
+                                cols.push(j);
+                            }
+                        }
+                    }
+                    cols.push('Update')
+                    let employeeTable = document.createElement('tbody');
+                    let tr = employeeTable.insertRow(-1);
+                    for (let i = 0; i < cols.length; i++) {
+                        let tableHeader = document.createElement("th");
+                        tableHeader.innerHTML = cols[i];
+                        tr.appendChild(tableHeader);
+                    }
+                    for (let i = 0; i < data.length; i++) {
+                        tr = employeeTable.insertRow(-1);
+                        rowNum = i + 1
+                        tr.setAttribute('id', 'rowNum' + rowNum)                        
+                        for (let j = 0; j < cols.length - 1; j++) {
+                            let newCell = tr.insertCell(-1);
+                            newCell.innerHTML = data[i][cols[j]];
+                        }
+                        let updateButton = tr.insertCell(-1);
+                        updateButton.innerHTML = '<button onclick="updateLineItem(id)">Update</button>'
+                        updateButton.firstChild.setAttribute('id', rowNum)
+                    }
+                    let employeeDataTableElement = document.getElementById("productDataTable");
+                    employeeDataTableElement.innerHTML = null;
+                    employeeDataTableElement.appendChild(employeeTable);
+                }
+            </script>
+            <form class=tableForm id="productDataTableForm" style="display:none;">
+                <table id="productDataTable"></table>
+            </form>    
+            <form class=basicForm id="productUpdateForm" style="display:none;">
+                <h2><b>Update Product</b></h2>
+                <label class=labelForm for="UPDATE_productCode">Product Code:</label>
+                <input class=inputForm type="text" id="UPDATE_productCode" name="UPDATE_productCode" readonly="readonly">
+                <p><b>Please update the following information:</b></p>                
+                <label class=labelForm for="UPDATE_productName">Product Name:</label>
+                <input class=inputForm type="text" id="UPDATE_productName" name="UPDATE_productName" required>
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_productDescription">Product Description:</label>
+                <textarea class=inputForm type="text" id="UPDATE_productDescription" name="UPDATE_productDescription" rows="7" cols="50" required></textarea>
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_legacyProduct">Legacy Product:</label>
+                <select class=inputForm id="UPDATE_legacyProduct" name="UPDATE_legacyProduct" required>
+                    <option value=1>Yes</option>
+                    <option value=0>No</option>
+                </select>
+                <br>
+                <br>                
+                <button type="submit" onclick="if(this.form.checkValidity()){toggleShowHide('productDataTable'), constructProductUpdateTable(), this.form.reset();}">Submit</button>
+            </form>
+            <script>
+                function updateLineItem(id) {
+                    event.preventDefault()
+                    rowNum = 'rowNum' + id
+                    cellNodes = document.getElementById(rowNum).childNodes
+                    let cellInfo = []
+                    for (let i = 0; i < cellNodes.length - 1; i++) {
+                        cellInfo[i] = cellNodes[i].innerHTML
+                    }
+                    toggleShowHide('productUpdate')
+                    document.getElementById('UPDATE_productCode').value = cellInfo[0]
+                    document.getElementById('UPDATE_productName').value = cellInfo[1]
+                    document.getElementById('UPDATE_productDescription').value = cellInfo[2]
+                    document.getElementById('UPDATE_legacyProduct').value = cellInfo[3]
+                }
+            </script>
+            <script>
+                async function constructProductUpdateTable() {
+                    event.preventDefault();
+                    const productCode = document.getElementById('UPDATE_productCode').value
+                    const headerArray = [document.getElementById('UPDATE_productCode').id,
+                                        document.getElementById('UPDATE_productName').id,
+                                        document.getElementById('UPDATE_productDescription').id,
+                                        document.getElementById('UPDATE_legacyProduct').id];                    
+                    const dataArray =  [document.getElementById('UPDATE_productCode').value,
+                                        document.getElementById('UPDATE_productName').value,
+                                        document.getElementById('UPDATE_productDescription').value,
+                                        document.getElementById('UPDATE_legacyProduct').value];
+                    dataJSON =  '{ '
+                    for (let i = 0; i < dataArray.length; i++) {
+                        if (dataArray[i] === "") {
+                            dataArray[i] = null
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":' + dataArray[i] + ', '
+                        } else {
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":"' + dataArray[i] + '", '
+                        }
+                    }
+                    dataJSON = dataJSON.substring(0, dataJSON.length - 2) + ' }'
+                    dataJSON = JSON.parse(dataJSON)
+                    await fetch(`/productUpdate`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(dataJSON)
+                    })   
+                    .then(response => response.json())
+                    .then(data => {
+                        queryString = 'SELECT * FROM Products WHERE productCode = ' + productCode + ';'
+                        fetch(`/productLookUp/${queryString}`)   
+                            .then(response => {
+                                return response.json();
+                            })
+                            .then(lookupData => appendData(lookupData))
+                            .catch(function (err) {
+                                alert('Invalid request')
+                            });
+                    })                    
+                    .catch((error) => {
+                        alert('Invalid request')                        
+                    });
+                }
+            </script>
+        </div>
+    </body>
+</html>

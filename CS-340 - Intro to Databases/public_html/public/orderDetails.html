@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head class="customers">
+        <meta charset="utf-8">
+        <link rel="icon" href="./images/dog.ico" />
+        <title>Canine Munchies</title>
+        <link href=".\stylesheet\style.css" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap" rel="stylesheet">
+        <img src='./images/header-banner.jpg' alt="header-banner" id="header-banner" />
+    </head>
+    <body>
+        <div class="vertical-menu">
+            <a href="index.html">Home Page</a herf>
+            <a href="customers.html">Customers</a herf>
+            <a href="employees.html">Employees</a href>
+            <a href="orderDetails.html" class="active">Order Details</a href>
+            <a href="orders.html">Orders</a href>
+            <a href="products.html">Products</a href>
+        </div>
+        <div class="body-content">
+            <h1  class="page-title">Order Details</h1>
+            <p>Please test this web app on Chrome.</p>
+            <div class="page-buttons">
+                <p><b>Please use one of the provided buttons to:</b></p>
+                <button type="button" id="orderDetailsAdd" onclick="toggleShowHide(id)">Add Order Details</button>
+                <inline>&emsp;</inline>
+                <button type="button" id="orderDetailsLookUp" onclick="toggleShowHide(id)">Order Details Look-up</button>
+                <inline>&emsp;</inline>
+                <button type="submit" id="orderDetailsListAll" onclick="toggleShowHide('orderDetailsDataTable'), constructListAllTable(id)">List All Order Details</button>
+                <inline>&emsp;</inline>
+                <button type="button" id="clearAll" onclick="toggleShowHide(id)">Clear All</button>
+                <br>
+                <br>
+                <script>
+                    function toggleShowHide(id) {
+                        const elementName = id + "Form";
+                        try {
+                            document.getElementById("orderDetailsAddForm").style.display="none"
+                        } finally {}
+                        try {
+                            document.getElementById("orderDetailsLookUpForm").style.display="none"
+                        } finally {}
+                        try {
+                            document.getElementById("orderDetailsDataTableForm").style.display="none"
+                        } finally {}
+                        try {
+                            document.getElementById("orderDetailsUpdateForm").style.display="none"
+                        } finally {}       
+                        try {
+                            document.getElementById("orderDetailsDeleteForm").style.display="none"
+                        } finally {}                                           
+                        try {
+                            let parent = document.getElementById("orderDetailsDataTable")
+                            while(parent.hasChildNodes()) {
+                                parent.removeChild(parent.firstChild)
+                            }
+                        } finally {}
+                        if (elementName !== "clearAllForm") {
+                            document.getElementById(elementName).style.display="block";   
+                        }
+                    }
+                </script>
+            </div>
+            <br>
+            <br>
+            <form class=basicForm id="orderDetailsAddForm" style="display:none;" action="/orderDetailsAdd" method="POST">
+                <h2><b>Add New Order Details</b></h2>
+                <p><b>Please enter the following information:</b></p>                
+                <label class=labelForm for="CREATE_orderNumber">Order Number:</label>
+                <input class=inputForm type="number" id="CREATE_orderNumber" name="CREATE_orderNumber" min="1" max="99999" required>
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_productCode">Product Code:</label>
+                <input class=inputForm type="number" id="CREATE_productCode" name="CREATE_productCode" min="1" max="999" required>
+                <br>
+                <br>
+                <label class=labelForm for="CREATE_quantityOrdered">Quantity Ordered:</label>
+                <input class=inputForm type="number" id="CREATE_quantityOrdered" name="CREATE_quantityOrdered" min="0" max="99" required>
+                <br>
+                <br>
+                <button type="submit" onclick="if(this.form.checkValidity()){toggleShowHide('orderDetailsDataTable'), constructOrderDetailsAddTable(), this.form.reset();}">Submit</button>
+            </form>
+            <script>
+                async function constructOrderDetailsAddTable() {
+                    event.preventDefault();
+                    const headerArray = [document.getElementById('CREATE_orderNumber').id,
+                                        document.getElementById('CREATE_productCode').id,
+                                        document.getElementById('CREATE_quantityOrdered').id];
+                    const dataArray =  [document.getElementById('CREATE_orderNumber').value,
+                                        document.getElementById('CREATE_productCode').value,
+                                        document.getElementById('CREATE_quantityOrdered').value];
+                    dataJSON =  '{ '
+                    for (let i = 0; i < dataArray.length; i++) {
+                        if (dataArray[i] === "") {
+                            dataArray[i] = null
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":' + dataArray[i] + ', '
+                        } else {
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":"' + dataArray[i] + '", '
+                        }
+                    }
+                    dataJSON = dataJSON.substring(0, dataJSON.length - 2) + ' }'
+                    dataJSON = JSON.parse(dataJSON)
+                    await fetch(`/orderDetailsAdd`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(dataJSON)
+                    })
+                    .then((response) => {
+                        return response.json()
+                    })
+                    .then(() => {
+                        const headerArray = [document.getElementById('CREATE_orderNumber').id,
+                                        document.getElementById('CREATE_productCode').id,
+                                        document.getElementById('CREATE_quantityOrdered').id];
+                        const dataArray =  [document.getElementById('CREATE_orderNumber').value,
+                                        document.getElementById('CREATE_productCode').value,
+                                        document.getElementById('CREATE_quantityOrdered').value];
+                        queryString = 'SELECT * FROM OrderDetails WHERE'
+                        for (let i = 0; i < dataArray.length; i++) {
+                            if (dataArray[i] !== "") {
+                                let headerName = headerArray[i].substring(7);
+                                queryString = queryString + ' ' + headerName + " = '" + dataArray[i] + "' AND";
+                            }
+                        }
+                        queryString = queryString.substring(0, queryString.length - 4)
+                        queryString = queryString + ';'
+                        fetch(`/orderDetailsLookUp/${queryString}`)   
+                            .then(response => {
+                                return response.json();
+                            })
+                            .then(data => {
+                                appendData(data);
+                            })
+                            .catch(function (err) {
+                                console.log('error: ' + err);
+                            });
+                        })
+                        .catch((error) => {
+                            alert("Invalid request")
+                            console.error('Error:', error);
+                        })
+                }
+            </script>
+            <form class=basicForm id="orderDetailsLookUpForm" style="display:none;" action="/orderDetailsLookUp" method="GET">
+                <h2><b>Order Details Look-up</b></h2>
+                <p><b>Please enter the following information:</b></p>  
+                <label class=labelForm for="READ_orderNumber">Order Number:</label>
+                <input class=inputForm type="number" id="READ_orderNumber" name="READ_orderNumber" min="1" max="99999">
+                <br>
+                <br>
+                <label class=labelForm for="READ_productCode">Product Code:</label>
+                <input class=inputForm type="number" id="READ_productCode" name="READ_productCode" min="1" max="999">
+                <br>
+                <br>
+                <label class=labelForm for="READ_quantityOrdered">Quantity Ordered:</label>
+                <input class=inputForm type="number" id="READ_quantityOrdered" name="READ_quantityOrdered" min="0" max="99">
+                <br>
+                <br>
+                <button type="submit" onclick="if(this.form.checkValidity()){toggleShowHide('orderDetailsDataTable'), constructOrderDetailsLookUpTable(), this.form.reset();}">Submit</button>
+            </form>
+            <script>
+                async function constructListAllTable(id) {
+                    await fetch('/' + id)
+                        .then(response => {
+                            return response.json();
+                        })
+                        .then(data => {
+                            appendData(data);
+                        })
+                        .catch(function (err) {
+                            console.log('error: ' + err);
+                        });
+                }
+            </script>
+            <script>
+                async function constructOrderDetailsLookUpTable() {
+                    event.preventDefault();
+                    const headerArray = [document.getElementById('READ_orderNumber').id,
+                                        document.getElementById('READ_productCode').id,
+                                        document.getElementById('READ_quantityOrdered').id];
+                    const dataArray =  [document.getElementById('READ_orderNumber').value,
+                                        document.getElementById('READ_productCode').value,
+                                        document.getElementById('READ_quantityOrdered').value];
+                    queryString = 'SELECT orderNumber, productName, quantityOrdered FROM OrderDetails INNER JOIN Products on Products.productCode = OrderDetails.productCode WHERE'
+                    for (let i = 0; i < dataArray.length; i++) {
+                        if (dataArray[i] !== "") {
+                            let headerName = headerArray[i].substring(5);
+                            queryString = queryString + ' OrderDetails.' + headerName + " = '" + dataArray[i] + "' AND";
+                        }
+                    }
+                    queryString = queryString.substring(0, queryString.length - 4)
+                    queryString = queryString + ' ORDER BY orderNumber, productName;'
+                    if (document.getElementById('READ_orderNumber').value === "") {
+                        if (document.getElementById('READ_productCode').value === "") {
+                            if (document.getElementById('READ_quantityOrdered').value === "") {
+                                queryString = 'SELECT orderNumber, productName, quantityOrdered FROM OrderDetails INNER JOIN Products on Products.productCode = OrderDetails.productCode ORDER BY orderNumber, productName;'
+                            }
+                        }
+                    }
+                    await fetch(`/orderDetailsLookUp/${queryString}`)   
+                        .then(response => {
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.length !== 0){
+                                appendData(data);
+                            } else {
+                                alert("Order Detail not found.")
+                            }
+                        })
+                        .catch(function (err) {
+                            console.log('error: ' + err);
+                        });
+                }
+            </script>
+            <script>
+                function appendData(data) {
+                    let cols = [];
+                    for (let i = 0; i < data.length; i++) {
+                        for (let j in data[i]) {
+                            if (cols.indexOf(j) === -1) {
+                                cols.push(j);
+                            }
+                        }
+                    }
+                    cols.push('Update')
+                    cols.push('Delete')
+                    let orderDetailsTable = document.createElement('tbody');
+                    let tr = orderDetailsTable.insertRow(-1);
+                    for (let i = 0; i < cols.length; i++) {
+                        let tableHeader = document.createElement("th");
+                        tableHeader.innerHTML = cols[i];
+                        tr.appendChild(tableHeader);
+                    }
+                    for (let i = 0; i < data.length; i++) {
+                        tr = orderDetailsTable.insertRow(-1);
+                        rowNum = i + 1
+                        tr.setAttribute('id', 'rowNum' + rowNum)                        
+                        for (let j = 0; j < cols.length - 2; j++) {
+                            let newCell = tr.insertCell(-1);
+                            newCell.innerHTML = data[i][cols[j]];
+                        }
+                        let updateButton = tr.insertCell(-1);
+                        updateButton.innerHTML = '<button onclick="updateLineItem(id)">Update</button>'
+                        updateButton.firstChild.setAttribute('id', rowNum)
+                        let deleteButton = tr.insertCell(-1);
+                        deleteButton.innerHTML = '<button onclick="deleteLineItem(id)">Delete</button>'
+                        deleteButton.firstChild.setAttribute('id', 'd' + rowNum)
+                    }
+                    let orderDetailsDataTableElement = document.getElementById("orderDetailsDataTable");
+                    orderDetailsDataTableElement.innerHTML = null;
+                    orderDetailsDataTableElement.appendChild(orderDetailsTable);
+                }
+            </script>
+            <form class=tableForm id="orderDetailsDataTableForm" style="display:none;">
+                <table id="orderDetailsDataTable"></table>
+            </form>
+            <form class=basicForm id="orderDetailsUpdateForm" style="display:none;">
+                <h2><b>Update Order Details</b></h2>           
+                <p><b>Please update the following information:</b></p>                
+                <label class=labelForm for="UPDATE_orderNumber">Order Number:</label>
+                <input class=inputForm type="number" id="UPDATE_orderNumber" name="UPDATE_orderNumber" min="1" max="99999" required readonly="readonly">
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_productCode">Product Code:</label>
+                <input class=inputForm type="number" id="UPDATE_productCode" name="UPDATE_productCode" min="1" max="999" required readonly="readonly">
+                <br>
+                <br>
+                <label class=labelForm for="UPDATE_quantityOrdered">Quantity Ordered:</label>
+                <input class=inputForm type="number" id="UPDATE_quantityOrdered" name="UPDATE_quantityOrdered" min="0" max="99" required>
+                <br>
+                <br>                
+                <button type="submit" onclick="if(this.form.checkValidity()){toggleShowHide('orderDetailsDataTable'), constructOrderDetailsUpdateTable(), this.form.reset();}">Submit</button>
+            </form>
+            <script>
+                async function updateLineItem(id) {
+                    event.preventDefault()
+                    rowNum = 'rowNum' + id
+                    cellNodes = document.getElementById(rowNum).childNodes
+                    let cellInfo = []
+                    for (let i = 0; i < cellNodes.length - 1; i++) {
+                        cellInfo[i] = cellNodes[i].innerHTML
+                    }
+                    queryString = `SELECT productCode FROM Products WHERE productName = "${cellInfo[1]}"`
+                    await fetch(`/productLookUp/${queryString}`)
+                        .then(response => {
+                                return response.json();
+                            })
+                            .then(data => {
+                                document.getElementById('UPDATE_productCode').value = data[0].productCode
+                            })
+                            .catch(function (err) {
+                                console.log('error: ' + err);
+                            });                    
+                    toggleShowHide('orderDetailsUpdate')
+                    document.getElementById('UPDATE_orderNumber').value = cellInfo[0]
+                    document.getElementById('UPDATE_quantityOrdered').value = cellInfo[2]
+                }
+            </script>
+            <script>
+                async function constructOrderDetailsUpdateTable() {
+                    event.preventDefault();
+                    const orderNumber = document.getElementById('UPDATE_orderNumber').value
+                    const productCode = document.getElementById('UPDATE_productCode').value
+                    const headerArray = [document.getElementById('UPDATE_orderNumber').id,
+                                        document.getElementById('UPDATE_productCode').id,
+                                        document.getElementById('UPDATE_quantityOrdered').id];                    
+                    const dataArray =  [document.getElementById('UPDATE_orderNumber').value,
+                                        document.getElementById('UPDATE_productCode').value,
+                                        document.getElementById('UPDATE_quantityOrdered').value];
+                    dataJSON =  '{ '
+                    for (let i = 0; i < dataArray.length; i++) {
+                        if (dataArray[i] === "") {
+                            dataArray[i] = null
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":' + dataArray[i] + ', '
+                        } else {
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":"' + dataArray[i] + '", '
+                        }
+                    }
+                    dataJSON = dataJSON.substring(0, dataJSON.length - 2) + ' }'
+                    dataJSON = JSON.parse(dataJSON)
+                    await fetch(`/orderDetailsUpdate`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(dataJSON)
+                    })   
+                    .then(response => response.json())
+                    .then(data => {
+                        queryString = 'SELECT * FROM OrderDetails WHERE orderNumber = ' + orderNumber + ' AND productCode = ' + productCode + ' ;'
+                        fetch(`/orderDetailsLookUp/${queryString}`)   
+                            .then(response => {
+                                return response.json();
+                            })
+                            .then(lookupData => {
+                                appendData(lookupData);
+                                const productCodeConvert = document.getElementById('orderDetailsDataTable').childNodes[0].childNodes[1].childNodes[1].innerHTML
+                                queryString = `SELECT productName FROM Products WHERE productCode = '${productCodeConvert}'`
+                                fetch(`/productLookUp/${queryString}`)
+                                    .then(response => {
+                                        return response.json();
+                                    })
+                                    .then (convertData => {
+                                        document.getElementById('orderDetailsDataTable').childNodes[0].childNodes[1].childNodes[1].innerHTML = convertData[0].productName
+                                    })
+                                    .catch(function (err) {
+                                        console.log('error: ' + err);
+                                    });
+                            })
+                            .catch(function (err) {
+                                console.log('error: ' + err);
+                            });
+                    })                    
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+                }
+            </script>            
+            <form class=basicForm id="orderDetailsDeleteForm" style="display:none;">
+                <h2><b>Delete Order Details</b></h2>           
+                <p><b>Please confirm the deletion of the following Order Detail:</b></p>                
+                <label class=labelForm for="DELETE_orderNumber">Order Number:</label>
+                <input class=inputForm type="number" id="DELETE_orderNumber" name="DELETE_orderNumber" min="1" max="99999" required readonly="readonly">
+                <br>
+                <br>
+                <label class=labelForm for="DELETE_productCode">Product Code:</label>
+                <input class=inputForm type="number" id="DELETE_productCode" name="DELETE_productCode" min="1" max="999" required readonly="readonly">
+                <br>
+                <br>
+                <label class=labelForm for="DELETE_quantityOrdered">Quantity Ordered:</label>
+                <input class=inputForm type="number" id="DELETE_quantityOrdered" name="DELETE_quantityOrdered" min="0" max="99" required readonly="readonly">
+                <br>
+                <br>                
+                <button type="submit" onclick="toggleShowHide('orderDetailsDataTable'), OrderDetailsDelete()">Confirm</button>
+            </form>            
+            <script>
+                async function deleteLineItem(id) {
+                    event.preventDefault()
+                    rowNum = 'rowNum' + id.substring(1)
+                    cellNodes = document.getElementById(rowNum).childNodes
+                    let cellInfo = []
+                    for (let i = 0; i < cellNodes.length - 1; i++) {
+                        cellInfo[i] = cellNodes[i].innerHTML
+                    }
+                    queryString = `SELECT productCode FROM Products WHERE productName = "${cellInfo[1]}"`
+                    await fetch(`/productLookUp/${queryString}`)
+                        .then(response => {
+                                return response.json();
+                        })
+                        .then(data => {
+                            document.getElementById('DELETE_productCode').value = cellInfo[1] = data[0].productCode
+                        })
+                        .catch(function (err) {
+                            console.log('error: ' + err);
+                        });                  
+                    document.getElementById('DELETE_orderNumber').value = cellInfo[0]
+                    document.getElementById('DELETE_quantityOrdered').value = cellInfo[2]
+                    toggleShowHide('orderDetailsDelete')
+                }
+            </script>
+            <script>
+                async function OrderDetailsDelete() {
+                    event.preventDefault();    
+                    const headerArray = [document.getElementById('DELETE_orderNumber').id,
+                                        document.getElementById('DELETE_productCode').id,
+                                        document.getElementById('DELETE_quantityOrdered').id];
+                    const dataArray =  [document.getElementById('DELETE_orderNumber').value,
+                                        document.getElementById('DELETE_productCode').value,
+                                        document.getElementById('DELETE_quantityOrdered').value];
+                    dataJSON =  '{ '
+                    for (let i = 0; i < dataArray.length; i++) {
+                        if (dataArray[i] === "") {
+                            dataArray[i] = null
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":' + dataArray[i] + ', '
+                        } else {
+                            dataJSON = dataJSON + '"' + headerArray[i].substring(7) + '":"' + dataArray[i] + '", '
+                        }
+                    }
+                    dataJSON = dataJSON.substring(0, dataJSON.length - 2) + ' }'
+                    dataJSON = JSON.parse(dataJSON)
+                    await fetch(`/orderDetailsDelete`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(dataJSON)
+                    })
+                        .then((response) => {
+                            return response.json()
+                        })
+                        .then(data => {
+                            alert('Order Detail has been successfully deleted!')
+                        })
+                        .catch(function (err) {
+                            console.log('error: ' + err);
+                        });    
+                }
+            </script>
+        </div>
+    </body>
+</html>
