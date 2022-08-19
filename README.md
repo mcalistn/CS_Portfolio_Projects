@@ -51,4 +51,11 @@ This program implements a subset of features of well-known shells, such as bash.
  - Implement custom handlers for 2 signals, SIGINT and SIGTSTP
 
 # CS-361 - Software Engineering I
-
+The project for this class was a term-long project of our choosing. I chose to develop an application that gives a BUY/SELL recommendation for a given stock based off of technical analysis (TA) indicators. However, the primary focus of this course was not the technical aspects of coding, but instead focused on the Agile work process and microservice architecture. We used the project to demonstrate proficiency in:
+ - Using a task management system (Jira, Asana, etc.)
+ - Collected user stories and developed them into actionable tickets
+ - Functional vs. non-functional requirements (ie. Quality Attributes)
+ - Practice using the "Sprint" methodology
+ - Microservice architecture, including implementation and development
+ 
+ 
