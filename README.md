@@ -25,3 +25,10 @@ The purpose of this assignment is to reinforce concepts related to string primit
  
 # CS-290 - Web Development
 Create a MERN stack to write a Single Page Application (SPA) that tracks exercises completed by the user. Program uses React for the front-end UI app and REST API, using Node and Express, for the back-end web service. Program uses MongoDB for persistence.
+
+# CS-325 - Analysis of Algorithms
+The programs is given: 
+ - A 2-D puzzle of size MxN, that has N rows and M column (M and N can be different). Each cell in the puzzle is either empty or has a barrier. An empty cell is marked by ‘-’ (hyphen) and the one with a barrier is marked by ‘#’.
+ - Two coordinates from the puzzle (a,b), which represents the source node, and (x,y), which represents the destination node. The program is only allowed to move to an empty cell and cannot move to a cell with a barrier in it.
+ 
+The goal of the program is to reach the destination cell by covering the minimum number of cells possible.
