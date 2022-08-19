@@ -38,3 +38,14 @@ The project for this class was a term-long project to create a front-end web app
  - To determine the production schedule the owners have commissioned the development of a backend database, Munchies Orders, that will record customer purchase orders. The database has complete CRUD (create, read, update, and delete) functionality and consists of five entity tables (Customers, Products, Orders, OrderDetails, and Employees) that record all relevant information regarding a customer’s purchase. In addition to the CRUD functionality, the database will be capable of creating a Customers entity without purchasing a product. However, if a product is purchased, a Customers entity must be tied to that purchase (ie. no “Guest” checkout).
 
 More information about the project overview, database outline, ERD, and Schema can be found in the attached PDF.
+
+# CS-344 - Operating Systems
+This program implements a subset of features of well-known shells, such as bash. Specifically, the program:
+ - Provide a prompt for running commands
+ - Handle blank lines and comments, which are lines beginning with the # character
+ - Provide expansion for the variable $$
+ - Execute 3 commands exit, cd, and status via code built into the shell
+ - Execute other commands by creating new processes using a function from the exec family of functions
+ - Support input and output redirection
+ - Support running commands in foreground and background processes
+ - Implement custom handlers for 2 signals, SIGINT and SIGTSTP
