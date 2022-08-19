@@ -58,4 +58,6 @@ The project for this class was a term-long project of our choosing. I chose to d
  - Practice using the "Sprint" methodology
  - Microservice architecture, including implementation and development
  
+Here is a video link for the implementation of the project - https://www.youtube.com/watch?v=-7wvbI_fydo
+ 
  
