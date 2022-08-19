@@ -32,3 +32,7 @@ The programs is given:
  - Two coordinates from the puzzle (a,b), which represents the source node, and (x,y), which represents the destination node. The program is only allowed to move to an empty cell and cannot move to a cell with a barrier in it.
  
 The goal of the program is to reach the destination cell by covering the minimum number of cells possible.
+
+# CS-340 - Intro to Databases
+The project for this class was a term-long project to create a front-end web application that connected to a back-end SQL database. My partner and I decided to create a web portal for a small business, Canine Munchies, that would help the owners of the company keep track of their purchase orders. Here is a exert from the Project Overview:
+ - To determine the production schedule the owners have commissioned the development of a backend database, Munchies Orders, that will record customer purchase orders. The database has complete CRUD (create, read, update, and delete) functionality and consists of five entity tables (Customers, Products, Orders, OrderDetails, and Employees) that record all relevant information regarding a customer’s purchase. In addition to the CRUD functionality, the database will be capable of creating a Customers entity without purchasing a product. However, if a product is purchased, a Customers entity must be tied to that purchase (ie. no “Guest” checkout).
