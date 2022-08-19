@@ -61,4 +61,4 @@ The project for this class was a term-long project of our choosing. I chose to d
 Here is a video link for the implementation of the project - https://www.youtube.com/watch?v=-7wvbI_fydo
  
 # CS-362 - Software Engineering II
-This class focused on 
+This class focused on Software Engineering testing and pipeline workflow via a centralized repository (GitHub). The main testing topics of the course were black-box testing, white-box testing, random-testing, and test-driven development. The end-of-the-term project was to use these testing techniques along with continuous integration methodology to develop a software development pipeline, in which code from individual contributors could be automatically built and tested on GitHub. The project had three contributors, each having a separate assignment that required the use of the shard repository. When a contributors was done editing their code they would initiate a pull request that would automatically run a build/testing suite and, assuming it passed the automatic tests, would notify the other contributors to perform code reviews. 
