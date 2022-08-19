@@ -49,3 +49,6 @@ This program implements a subset of features of well-known shells, such as bash.
  - Support input and output redirection
  - Support running commands in foreground and background processes
  - Implement custom handlers for 2 signals, SIGINT and SIGTSTP
+
+# CS-361 - Software Engineering I
+
