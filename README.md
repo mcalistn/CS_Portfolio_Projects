@@ -9,10 +9,10 @@ This program practices using binary trees and priority queues. In this program t
 
 # CS-261 - Data Structures
 Hash Map Implementation - Chaining
- - Use a dynamic array to store your hash table and implement chaining for collision resolution using a singly linked list. Chains of key / value pairs must be stored in linked list nodes.
+ - Use a dynamic array to store a hash table and implement chaining for collision resolution using a singly linked list. Chains of key / value pairs must be stored in linked list nodes.
 
 Hash Map Implementation - Open Addressing
- - Use a dynamic array to store your hash table and implement Open Addressing with Quadratic Probing for collision resolution inside that dynamic array. Key/value pairs must be stored in the array.
+ - Use a dynamic array to store a hash table and implement Open Addressing with Quadratic Probing for collision resolution inside that dynamic array. Key/value pairs must be stored in the array.
 
 # CS-271 - Assembly Language
 The purpose of this assignment is to reinforce concepts related to string primitive instructions and macros by:
