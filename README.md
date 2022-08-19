@@ -4,6 +4,9 @@
 # CS-142 - Fundamentals I
 This program processes an input file of data for a personality test known as the Keirsey Temperament Sorter. The Keirsey personality test involves answering 70 questions each of which have two answers. The input file will contain a series of line pairs, one per person. The first line will have the person’s name (possibly including spaces) and the second line will have a series of 70 letters all in a row. The program computes the scores and overall result for each person and reports this information to an output file.
 
+# CS-143 - Fundamentals II
+This program practices using binary trees and priority queues. In this program text files are compressed by using a coding scheme based on the frequency of characters, called Huffman coding. Instead of using the usual seven or eight bits per character, Huffman's method uses only a few bits for characters that are used often and more bits for those that are rarely used.
+
 # CS-261 - Data Structures
 Hash Map Implementation - Chaining
  - Use a dynamic array to store your hash table and implement chaining for collision resolution using a singly linked list. Chains of key / value pairs must be stored in linked list nodes.
